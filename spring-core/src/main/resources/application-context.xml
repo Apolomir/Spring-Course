@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:property-placeholder location="classpath:app.properties"/>
+
+  <!-- Facade -->
+  <bean id="bookingFacade" class="com.epam.springcore.facade.BookingFacadeImpl">
+    <constructor-arg ref="userService"/>
+    <constructor-arg ref="eventService"/>
+    <constructor-arg ref="ticketService"/>
+  </bean>
+
+  <!-- Services -->
+  <bean id="userService" class="com.epam.springcore.service.UserServiceImpl"
+    autowire="constructor"/>
+
+  <bean id="eventService" class="com.epam.springcore.service.EventServiceImpl"
+    autowire="constructor"/>
+
+  <bean id="ticketService" class="com.epam.springcore.service.TicketServiceImpl"
+    autowire="constructor">
+  </bean>
+
+  <!-- Repositories -->
+  <bean id="userRepository" class="com.epam.springcore.repository.UserRepositoryImpl">
+    <property name="userStorage" ref="userStorage"/>
+  </bean>
+
+  <bean id="eventRepository" class="com.epam.springcore.repository.EventRepositoryImpl">
+    <property name="eventStorage" ref="eventStorage"/>
+  </bean>
+
+  <bean id="ticketRepository" class="com.epam.springcore.repository.TicketRepositoryImpl">
+    <property name="ticketStorage" ref="ticketStorage"/>
+  </bean>
+
+  <!-- Storages -->
+  <bean id="userStorage" class="com.epam.springcore.repository.storage.UserStorageImpl"
+    p:filePath="${userStorageFilePath}"/>
+
+  <bean id="eventStorage" class="com.epam.springcore.repository.storage.EventStorageImpl"
+    p:filePath="${eventStorageFilePath}"/>
+
+  <bean id="ticketStorage" class="com.epam.springcore.repository.storage.TicketStorageImpl"
+    p:filePath="${ticketStorageFilePath}"/>
+
+  <!-- Post-processor -->
+  <bean class="com.epam.springcore.bean.CustomBeanPostProcessor"/>
+</beans>
